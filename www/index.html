@@ -38,7 +38,7 @@
 
       <div class="list">
        <a class="item item-thumbnail-left"
-       href="{{story.url}}" target="_blank" 
+       ng-click="openLink(story.url)" 
        ng-repeat="story in stories track by story.id">
        <img ng-src="{{story.thumbnail}}"
        ng-if="story.thumbnail.indexOf('http')===0">

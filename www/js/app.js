@@ -8,10 +8,14 @@ app.controller('RedditCtrl', function($http, $scope) {
   $scope.stories = [];
 
   function loadStories(params, callback) {
-    $http.get('https://www.reddit.com/r/funny/new/.json', {params: params})
+    $http.get('https://www.reddit.com/r/energy/new/.json', {params: params})
       .success(function(response) {
         var stories = [];
         angular.forEach(response.data.children, function(child) {
+          var story = child.data;
+          if (!story.thumbnail || story.thumbnail === 'self' || story.thumbnail === 'default') {
+            story.thumbnail = 'https://www.redditstatic.com/icon.png';
+          }
           stories.push(child.data);
         });
         callback(stories);
@@ -37,6 +41,10 @@ app.controller('RedditCtrl', function($http, $scope) {
     });
   };
 
+  $scope.openLink = function(url){
+    window.open(url, '_blank');
+  };
+
 });
 
 app.run(function($ionicPlatform) {
@@ -44,6 +52,11 @@ app.run(function($ionicPlatform) {
     if(window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
+
+    if (window.cordova && window.cordova.InAppBrowser) {
+      window.open = window.cordova.InAppBrowser.open;
+    }
+    
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
